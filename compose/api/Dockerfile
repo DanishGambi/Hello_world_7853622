@@ -1,15 +1,62 @@
-FROM continuumio/miniconda
+FROM python:3.12-slim
 
-RUN apt-get update \
-  # dependencies for building Python packages \
-  && apt-get install -y build-essential \
-  # psycopg2 dependencies
+RUN apt-get update
+#   dependencies building Python packages \
+#  && apt-get install -y build-essential \
+#   psycopg2 dependencies
 
-WORKDIR usr/app
+WORKDIR /app
 
-COPY ./environment.yml usr/app/
+#COPY environment.yml .
 
-CMD conda create -f environment.yml
+#RUN pip env create -f environment.yml
 
-COPY /src /usr/app/
+COPY requirements_demo.txt requirements.txt
+
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
+
+COPY src ./
+
+FROM python:3.12-slim
+
+RUN apt-get update
+#   dependencies building Python packages \
+#  && apt-get install -y build-essential \
+#   psycopg2 dependencies
+
+WORKDIR /app
+
+#COPY environment.yml .
+
+#RUN pip env create -f environment.yml
+
+COPY requirements_demo.txt requirements.txt
+
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
+
+COPY src ./
+
+FROM python:3.12-slim
+
+RUN apt-get update
+#   dependencies building Python packages \
+#  && apt-get install -y build-essential \
+#   psycopg2 dependencies
+
+WORKDIR /app
+
+#COPY environment.yml .
+
+#RUN pip env create -f environment.yml
+
+COPY requirements_demo.txt requirements.txt
+
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
+
+COPY src ./src
+
+CMD ["streamlit", "run", "src/main.py"]
 
