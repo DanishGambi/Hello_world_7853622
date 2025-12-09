@@ -2,3 +2,4 @@
 
 ## Запуск docker-file
 docker -f compose/api/ -t prototype
+docker run -t prototype
