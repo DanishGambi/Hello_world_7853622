@@ -1,62 +1,46 @@
-FROM python:3.12-slim
+#FROM python:3.12-slim
+#
+#RUN apt-get update
+##   dependencies building Python packages \
+##  && apt-get install -y build-essential \
+##   psycopg2 dependencies
+#
+#WORKDIR /app
+#
+##COPY environment.yml .
+#
+##RUN pip env create -f environment.yml
+#
+#COPY requirements_demo.txt requirements.txt
+#
+#RUN pip install --upgrade pip
+#RUN pip install -r requirements.txt
+#
+#COPY src ./src
+#
+#CMD ["streamlit", "run", "src/main.py"]
 
-RUN apt-get update
-#   dependencies building Python packages \
-#  && apt-get install -y build-essential \
-#   psycopg2 dependencies
+############################
 
-WORKDIR /app
-
-#COPY environment.yml .
-
-#RUN pip env create -f environment.yml
-
-COPY requirements_demo.txt requirements.txt
-
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
-
-COPY src ./
-
-FROM python:3.12-slim
-
-RUN apt-get update
-#   dependencies building Python packages \
-#  && apt-get install -y build-essential \
-#   psycopg2 dependencies
-
-WORKDIR /app
-
-#COPY environment.yml .
-
-#RUN pip env create -f environment.yml
-
-COPY requirements_demo.txt requirements.txt
-
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
-
-COPY src ./
-
-FROM python:3.12-slim
-
-RUN apt-get update
-#   dependencies building Python packages \
-#  && apt-get install -y build-essential \
-#   psycopg2 dependencies
+FROM continuumio/miniconda3:latest
 
 WORKDIR /app
 
-#COPY environment.yml .
+COPY environment.yml .
 
-#RUN pip env create -f environment.yml
+RUN conda env update -f environment.yml && \
+    conda clean --all --yes
 
-COPY requirements_demo.txt requirements.txt
+ENV PATH /opt/conda/envs/hakaton/bin:$PATH
 
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends default-jre && \
+    rm -rf /var/lib/apt/lists/*
 
 COPY src ./src
 
 CMD ["streamlit", "run", "src/main.py"]
+
+
+
 
