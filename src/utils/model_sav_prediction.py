@@ -92,6 +92,6 @@ async def predict_sav(smile: str, path_model:str):
     X_df = await smile_to_fingerprint(smile)
     model = await load_model(path_model)
 
-    predict = model.prediction(X_df)
+    predict = model.predict(X_df)
 
     return predict

@@ -45,7 +45,7 @@ async def all_predictions(list_df: list[str],
         if name_df in list(model_and_outputs.keys()):
             name_file = os.listdir(name_df)[0]
             model_path = name_df + "/" + name_file
-            if (name_df != "base"):
+            if (name_df != "base" and name_df != "FreeSolkSAMPL"):
                 st.write(model_path)
                 model = Model(
                     model_path,
@@ -63,7 +63,7 @@ async def all_predictions(list_df: list[str],
                         }
                     }
                 )
-            elif (name_df == "base"):
+            elif (name_df == "base" or name_df == "FreeSolkSAMPL"):
                 predict = await predict_sav(
                     input_smile,
                     model_path
