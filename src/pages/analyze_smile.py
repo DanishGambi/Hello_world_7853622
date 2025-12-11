@@ -1,4 +1,5 @@
 from utils.model_prediction import Model
+from utils.model_sav_prediction import predict_sav
 
 import asyncio
 import os
@@ -16,7 +17,7 @@ model_and_outputs = {
         "output_feature": "p_np"
     },
     "base": {
-            "output_feature": "pIC50"
+            "output_feature": ["pIC50", "Class"]
         },
     "FreeSolkSAMPL": {
         "output_feature": "expt"
@@ -39,28 +40,47 @@ async def all_predictions(list_df: list[str],
     predictions = {}
 
     for name_df in list_df:
-        st.write(model_and_outputs.get(name_df))
         feature_output = model_and_outputs.get(name_df).get("output_feature")
 
         if name_df in list(model_and_outputs.keys()):
-            model_path = name_df + "/" + os.listdir(name_df)[0]
-            st.write(model_path)
-            model = Model(
-                model_path,
-                name_df,
-                feature_output
-            )
+            if (name_df != "base"):
+                name_file = os.listdir(name_df)[0]
+                model_path = name_df + "/" + name_file
 
-            predict = model.prediction(input_smile)
-            st.write(predict)
-            predictions.update(
-                {
-                    name_df: {
-                        "predict": predict.as_data_frame(),
-                        "output_feature": feature_output
+                st.write(model_path)
+                model = Model(
+                    model_path,
+                    name_df,
+                    feature_output
+                )
+
+                predict = model.prediction(input_smile)
+                st.write(predict)
+                predictions.update(
+                    {
+                        name_df: {
+                            "predict": predict.as_data_frame(),
+                            "output_feature": feature_output
+                        }
                     }
-                }
-            )
+                )
+            elif (name_df == "base"):
+                predict = await predict_sav(
+                    input_smile,
+                    model_path
+                )
+
+                st.write(model_path)
+                st.write(predict)
+
+                predictions.update(
+                    {
+                        name_df: {
+                            "predict": predict,
+                            "output_feature": feature_output
+                        }
+                    }
+                )
 
     return predictions
 
@@ -73,10 +93,9 @@ async def main():
     img_molekul.save(buffer, format="PNG")
     buffer.seek(0)
 
-    st.write(os.getcwd())
+    os.chdir("src")
     os.chdir("models")
     list_df = os.listdir()
-    st.write(list_df)
     predictions = await all_predictions(list_df,
                                         smile)
     st.write(predictions)

@@ -1,31 +1,25 @@
 import asyncio
-from pyexpat import native_encoding
+from io import BytesIO
 
 import streamlit as st
+from rdkit import Chem
 
 async def main():
-    variants = ["Свой дрон", "Возьму в аренду"]
-    type_bpla = st.radio(
-        "Выберите тип дрона",
-        variants,
-        index=None,
-        key="choice"
-    )
+    st.title("Анализ свойств молекулы")
 
-    goal = st.text_input("Введите цель полёта")
+    smile = st.text_input("Введите молекулу")
 
-    all_components = [type_bpla]
+    button_continue = st.button("Далее")
 
-    if st.button("Далее"):
-        for element in all_components:
-            if not element:
-                st.info("Вы заполнили не все компоненты")
-                break
+    if (button_continue):
+        if not (smile):
+            st.info("Вы заполнили не все компоненты")
         else:
-            if type_bpla == "Свой дрон":
-                st.switch_page("pages/your_drone.py")
-            elif type_bpla == "Возьму в аренду":
-                st.switch_page("pages/rent_drone.py")
+            st.session_state.smile = smile
+
+            st.switch_page(
+                "pages/analyze_smile.py"
+            )
 
 if __name__ == "__main__":
     asyncio.run(main())
