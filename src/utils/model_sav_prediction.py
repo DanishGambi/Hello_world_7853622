@@ -2,6 +2,7 @@ import pandas as pd
 import pickle
 from rdkit import Chem
 from rdkit.Chem import Descriptors
+import sklearn
 
 
 async def smile_to_fingerprint(input_data):

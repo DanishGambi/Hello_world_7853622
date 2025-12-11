@@ -43,10 +43,9 @@ async def all_predictions(list_df: list[str],
         feature_output = model_and_outputs.get(name_df).get("output_feature")
 
         if name_df in list(model_and_outputs.keys()):
+            name_file = os.listdir(name_df)[0]
+            model_path = name_df + "/" + name_file
             if (name_df != "base"):
-                name_file = os.listdir(name_df)[0]
-                model_path = name_df + "/" + name_file
-
                 st.write(model_path)
                 model = Model(
                     model_path,
