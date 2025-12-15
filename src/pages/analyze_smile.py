@@ -12,6 +12,8 @@ import streamlit as st
 from rdkit.Chem import Draw
 from rdkit import Chem
 
+path_models = "src/models"
+
 model_and_outputs = {
     "HIV": {
         "output_feature": "HIV_active"
@@ -39,6 +41,7 @@ model_and_outputs = {
 
 async def all_predictions(list_df: list[str],
                           input_smile):
+    global path_models
     global model_and_outputs
     predictions = {}
 
@@ -46,10 +49,10 @@ async def all_predictions(list_df: list[str],
         feature_output = model_and_outputs.get(name_df).get("output_feature")
 
         if name_df in list(model_and_outputs.keys()):
-            name_file = os.listdir(name_df)[0]
-            model_path = name_df + "/" + name_file
+            name_file = os.listdir(path_models + "/" + name_df)[0]
+            model_path = path_models + "/" + name_df + "/" + name_file
+
             if (name_df != "base" and name_df != "FreeSolkSAMPL"):
-                # st.write(model_path)
                 model = Model(
                     model_path,
                     name_df,
@@ -86,6 +89,7 @@ async def all_predictions(list_df: list[str],
 
             elif (name_df == "base"):
                 features = {}
+                name_df = path_models + "/" + name_df
 
                 for name_file in os.listdir(name_df):
                     model_path = name_df + "/" + name_file
@@ -98,12 +102,9 @@ async def all_predictions(list_df: list[str],
 
                     features.update(
                         {
-                            model_path.split(".")[0].split("/")[1] : predict
+                            name_file.split(".")[0]: predict
                         }
                     )
-
-                    # st.write(model_path)
-                    # st.write(predict)
 
                 predictions.update(
                     {
@@ -116,6 +117,8 @@ async def all_predictions(list_df: list[str],
     return predictions
 
 async def main():
+    global path_models
+
     smile = st.session_state.get("smile")
     molekul_chem = Chem.MolFromSmiles(smile)
 
@@ -132,13 +135,10 @@ async def main():
     formula = smiles_to_formula(smile)
     st.write(f"Химическая формула молекулы: {formula}")
 
-    list_df = os.listdir()
-    st.write(list_df)
+
+    list_df = os.listdir(path_models)
     predictions = await all_predictions(list_df,
                                         smile)
-    # st.write(predictions)
-
-
 
     await transform_info(predictions)
 
@@ -149,18 +149,8 @@ async def main():
     st.subheader("Дополнительный анализ модели параметров")
     st.write(response_model)
 
-
-
 try:
-    os.chdir("src")
-    os.chdir("models")
-
     asyncio.run(main())
-
-    os.chdir("..")
-    os.chdir("..")
 except:
     st.info("В вводе допущена ошибка")
 
-    os.chdir("..")
-    os.chdir("..")
