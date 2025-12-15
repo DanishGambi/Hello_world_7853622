@@ -27,9 +27,12 @@ FROM continuumio/miniconda3:latest
 WORKDIR /app
 
 COPY environment.yml .
+COPY requirements.txt .
 
 RUN conda env update -f environment.yml && \
     conda clean --all --yes
+
+RUN pip install -r requirements.txt
 
 ENV PATH /opt/conda/envs/hakaton/bin:$PATH
 
@@ -39,6 +42,7 @@ RUN apt-get update && \
 
 COPY src ./src
 
+#CMD ["cd", "src"]
 CMD ["streamlit", "run", "src/main.py"]
 
 
