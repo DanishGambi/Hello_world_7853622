@@ -1,10 +1,18 @@
 import asyncio
+import os
 from io import BytesIO
 
 import streamlit as st
 from rdkit import Chem
 
 async def main():
+    if os.getcwd() != "/app":
+        os.chdir("..")
+        os.chdir("..")
+    elif os.getcwd() == "/app":
+        st.write(os.getcwd())
+        # st.write(type(os.getcwd()))
+
     st.title("Анализ свойств молекулы")
 
     smile = st.text_input("Введите молекулу")

@@ -54,13 +54,13 @@ async def llm_question(X_df,
     api_key_openrouter = os.getenv('OPENROUTER_API_KEY')
 
     # Проверяем, что ключ загрузился
-    # if not api_key_openrouter:
-    #     print("❌ ОШИБКА: Не найден API ключ!")
-    #     print("Создайте файл .env в папке проекта со следующим содержимым:")
-    #     print("OPENROUTER_API_KEY=sk-or-v1-ваш_ключ")
-    #     exit(1)
+    if not api_key_openrouter:
+        print("❌ ОШИБКА: Не найден API ключ!")
+        print("Создайте файл .env в папке проекта со следующим содержимым:")
+        print("OPENROUTER_API_KEY=sk-or-v1-ваш_ключ")
+        exit(1)
 
-    # print("✅ API ключ успешно загружен")
+    print("✅ API ключ успешно загружен")
 
     # Создаем клиент OpenRouter (полный аналог вашего кода из Colab)
     client = OpenAI(

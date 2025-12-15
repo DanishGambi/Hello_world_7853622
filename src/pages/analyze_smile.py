@@ -132,10 +132,8 @@ async def main():
     formula = smiles_to_formula(smile)
     st.write(f"Химическая формула молекулы: {formula}")
 
-    os.chdir("src")
-    os.chdir("models")
     list_df = os.listdir()
-
+    st.write(list_df)
     predictions = await all_predictions(list_df,
                                         smile)
     # st.write(predictions)
@@ -151,8 +149,18 @@ async def main():
     st.subheader("Дополнительный анализ модели параметров")
     st.write(response_model)
 
-    #
-    os.chdir("..")
-    os.chdir("..")
 
-asyncio.run(main())
+
+try:
+    os.chdir("src")
+    os.chdir("models")
+
+    asyncio.run(main())
+
+    os.chdir("..")
+    os.chdir("..")
+except:
+    st.info("В вводе допущена ошибка")
+
+    os.chdir("..")
+    os.chdir("..")
