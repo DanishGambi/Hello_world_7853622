@@ -43,6 +43,6 @@ class Model():
         model = h2o.import_mojo(self.model_path)
         predictions = model.predict(input_data)
 
-        return predictions
+        return predictions['predict'].as_data_frame().values.flatten()
 
 

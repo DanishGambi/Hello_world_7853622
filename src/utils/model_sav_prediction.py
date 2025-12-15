@@ -94,4 +94,4 @@ async def predict_sav(smile: str, path_model:str):
 
     predict = model.predict(X_df)
 
-    return predict
+    return predict, X_df
