@@ -1,0 +1,6 @@
+tokenizers
+rdkit
+torch==2.9.0
+sklearn==1.6.1
+numpy==2.0.2
+pandas==2.2.2
