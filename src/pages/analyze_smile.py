@@ -11,6 +11,8 @@ from io import BytesIO
 import streamlit as st
 from rdkit.Chem import Draw
 from rdkit import Chem
+from rdkit.Chem import AllChem
+import py3Dmol
 
 path_models = "src/models"
 
@@ -131,6 +133,18 @@ async def main():
         buffer,
         caption="Molecule from SMILES"
     )
+
+    mol = Chem.AddHs(molekul_chem)
+    AllChem.EmbedMolecule(mol)
+    AllChem.MMFFOptimizeMolecule(mol)
+
+    mb = Chem.MolToMolBlock(mol)
+    view = py3Dmol.view(width=900, height=600)
+    view.addModel(mb, 'mol')
+    view.setStyle({'stick': {}})
+    view.zoomTo()
+
+    st.components.v1.html(view._make_html(), height=400)
 
     formula = smiles_to_formula(smile)
     st.write(f"Химическая формула молекулы: {formula}")
