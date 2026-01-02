@@ -7,7 +7,7 @@ docker run -t prototype
 
 
 ## Архитектура
-
+```
 MOLECULAR PROPERTY PREDICTION WEB SERVICE
 =========================================
 
@@ -52,3 +52,4 @@ INFRASTRUCTURE:
 └─────────────────────────┘
 
 TECH: Python, scikit-learn, SHAP, RDKit, Flask, Docker
+```
